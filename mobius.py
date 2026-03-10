@@ -3,7 +3,15 @@
 # "Emergent Patterns in Digit Gap Sequences of Irrational Constants"
 # =============================================================================
 
-import mpmath as mp
+# high‑precision arithmetic; install with `pip install mpmath` if you don’t have it
+try:
+    import mpmath as mp
+except ImportError:                       # linter: import-error
+    raise ImportError(
+        "mpmath is required for high‑precision constants; "
+        "install it with `pip install mpmath`"
+    )
+
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import defaultdict
@@ -13,12 +21,12 @@ import time
 #  Settings
 # ────────────────────────────────────────────────
 
-N_DIGITS    = 10_000_000      # 10 million — reduce to 1e6 or 2e6 for testing
-BLOCK_LEN   = 6               # n = 6 as used in the paper
-MAX_BLOCKS_TO_TRACK = 250_000 # limit memory — only keep most recent positions
+N_DIGITS = 10_000_000      # 10 million – reduce to 1e6 or 2e6 for testing
+BLOCK_LEN = 6              # n = 6 as used in the paper
+MAX_BLOCKS_TO_TRACK = 250_000  # limit memory — only keep most recent positions
 
 SAVE_FIGURES = True           # set to False if you only want to see plots
-OUTPUT_DIR   = "./figures/"   # folder must exist or change to current dir
+OUTPUT_DIR = "./figures/"     # folder must exist or change to current dir
 
 plt.style.use('bmh')          # nicer default look
 
@@ -34,41 +42,46 @@ constants = {
     'pi':     mp.pi,
     'e':      mp.e,
     'sqrt2':  mp.sqrt(2),
-    'phi':    (1 + mp.sqrt(5))/2,
+    'phi':    (1 + mp.sqrt(5)) / 2,
     'zeta3':  mp.zeta(3)
 }
 
 digit_strings = {}
 for name, val in constants.items():
     t0 = time.time()
-    s = str(val)[2 : 2 + N_DIGITS]          # skip '0.' or '3.'
+    s = str(val)[2 : 2 + N_DIGITS]  # skip '0.' or '3.'
     digit_strings[name] = s
-    print(f"{name:6s} : {len(s):,} digits in {time.time()-t0:.1f} s")
+    print(
+        f"{name:6s} : {len(s):,} digits in "
+        f"{time.time() - t0:.1f} s"
+    )
 
 # ────────────────────────────────────────────────
 #  2. Compute gaps for one constant (reusable function)
 # ────────────────────────────────────────────────
 
-def compute_gaps(digit_str, n=BLOCK_LEN, max_track=MAX_BLOCKS_TO_TRACK):
+def compute_gaps(digit_str,
+                 n=BLOCK_LEN,
+                 max_track=MAX_BLOCKS_TO_TRACK):
     """Return list of gaps between successive identical n-digit blocks"""
     last_seen = defaultdict(lambda: -999_999_999)  # far negative
     gaps = []
-    
+
     for i in range(len(digit_str) - n + 1):
-        block = digit_str[i:i+n]
-        
+        block = digit_str[i : i + n]
+
         prev = last_seen[block]
         if prev >= 0:
             gap = i - prev
             gaps.append(gap)
-        
+
         # keep memory bounded
         last_seen[block] = i
         if len(last_seen) > max_track:
             # crude eviction — remove oldest (not perfect but ok for demo)
             oldest_key = min(last_seen, key=last_seen.get)
             del last_seen[oldest_key]
-    
+
     return np.array(gaps, dtype=np.float64)
 
 
@@ -79,7 +92,7 @@ def compute_gaps(digit_str, n=BLOCK_LEN, max_track=MAX_BLOCKS_TO_TRACK):
 print("\nComputing gaps...")
 
 gaps_pi = compute_gaps(digit_strings['pi'])
-gaps_e  = compute_gaps(digit_strings['e'])
+gaps_e = compute_gaps(digit_strings['e'])
 
 print(f"π:  {len(gaps_pi):,} gaps found")
 print(f"e:  {len(gaps_e):,} gaps found")
@@ -93,13 +106,13 @@ def normalize_to_waveform(gaps, window=500):
     norm = (gaps - mu) / sigma
     # smooth a bit so plot is readable
     cumsum = np.cumsum(norm)
-    smoothed = np.convolve(cumsum, np.ones(window)/window, mode='valid')
+    smoothed = np.convolve(cumsum, np.ones(window) / window, mode='valid')
     x = np.arange(len(smoothed))
     return x, smoothed
 
 
 x_pi, wave_pi = normalize_to_waveform(gaps_pi)
-x_e,  wave_e  = normalize_to_waveform(gaps_e)
+x_e, wave_e = normalize_to_waveform(gaps_e)
 
 # ────────────────────────────────────────────────
 #  4. Create the four figures
@@ -108,8 +121,18 @@ x_e,  wave_e  = normalize_to_waveform(gaps_e)
 # Figure 1: 2D waveform overlay (π blue, e orange)
 fig1, ax1 = plt.subplots(figsize=(12, 5))
 ax1.plot(x_pi, wave_pi, 'C0', lw=0.8, alpha=0.9, label='π')
-ax1.plot(x_e[:len(wave_pi)], wave_e[:len(wave_pi)], 'C1', lw=0.8, alpha=0.7, label='e')
-ax1.set_title(f'Normalized gap waveform overlay  —  n={BLOCK_LEN}, ~{N_DIGITS:,} digits')
+ax1.plot(
+    x_e[:len(wave_pi)],
+    wave_e[:len(wave_pi)],
+    'C1',
+    lw=0.8,
+    alpha=0.7,
+    label='e'
+)
+ax1.set_title(
+    f'Normalized gap waveform overlay  —  n={BLOCK_LEN}, '
+    f'~{N_DIGITS:,} digits'
+)
 ax1.set_xlabel('Gap index (smoothed)')
 ax1.set_ylabel('Normalized gap size')
 ax1.legend()
