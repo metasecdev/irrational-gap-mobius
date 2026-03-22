@@ -1,0 +1,10 @@
+name = "Thoughts"
+version = "0.1.0"
+defaultTargets = ["thoughts"]
+
+[[lean_lib]]
+name = "Thoughts"
+
+[[lean_exe]]
+name = "thoughts"
+root = "Main"
