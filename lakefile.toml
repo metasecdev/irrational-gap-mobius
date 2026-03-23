@@ -1,10 +1,9 @@
+# Lake configuration file
+# This file is optional when lakefile.lean exists
+# Keeping minimal configuration to avoid conflicts
+
 name = "Thoughts"
 version = "0.1.0"
 defaultTargets = ["thoughts"]
 
-[[lean_lib]]
-name = "Thoughts"
-
-[[lean_exe]]
-name = "thoughts"
-root = "Main"
+# Use lakefile.lean for detailed configuration

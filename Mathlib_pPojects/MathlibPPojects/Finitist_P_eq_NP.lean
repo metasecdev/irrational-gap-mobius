@@ -10,13 +10,11 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Nat.Prime
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+import BasicFinitist
 
 namespace FinitistPeqNP
 
-open Real Nat Finset
-
--- Gap sequence of π (axiomatized; in practice use BBP spigot)
-noncomputable def gapSeq (i : ℕ) : ℕ := sorry
+open Real Nat Finset BasicFinitist
 
 -- Effective density axiom (BBP + geometric waiting time)
 axiom gap_density_mod_m (m : ℕ) (m_pos : m ≥ 2) (r : ℕ) (r_lt : r < m) (N : ℕ) :
@@ -47,7 +45,7 @@ structure ThreeSAT (n : ℕ) where
 
 -- Main theorem: constructive P=NP witness
 theorem finitist_P_eq_NP (n : ℕ) (phi : ThreeSAT n) (hm : phi.clauses.length ≤ n ^ 3) :
-  ∃ (l : ℕ) (hl : l ≤ 300 * n ^ 3 * Nat.log2 n + 1)
+  ∃ (l : ℕ) (hl : l ≤ complexityBound n)
     (twists : Fin n → Fin 3)
     (G : ℕ → ℕ),  -- finite view of gapSeq
     (∀ i < l, G i = gapSeq i) ∧
