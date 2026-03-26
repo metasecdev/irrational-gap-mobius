@@ -3,7 +3,7 @@
   Simple syntax and structure test without heavy dependencies
   March 2026 – Metasec Dev framework
 -/
-
+import Lean
 -- Test basic syntax and structure
 def testFunction (x : Nat) : Nat := x + 1
 
@@ -17,7 +17,6 @@ structure TestStructure where
   name : String
 
 -- Test that imports work (minimal)
-import Lean
 
 namespace SimpleTest
 
