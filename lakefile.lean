@@ -8,9 +8,9 @@ package Thoughts {
   moreServerArgs := #["-DautoImplicit=false"]
 }
 
--- Define the default workspace with a specific mathlib version
+-- Define the default workspace with mathlib
 require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "v3.0.0"
+  "https://github.com/leanprover-community/mathlib4.git"
 
 @[default_target]
 lean_lib Thoughts {
