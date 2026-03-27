@@ -14,5 +14,6 @@ require mathlib from git
 
 @[default_target]
 lean_lib Thoughts {
-  -- Add any additional library configuration here
+  -- BasicFinitist module is defined in basic_sorry.lean
+  -- All other .lean files will be automatically included
 }
