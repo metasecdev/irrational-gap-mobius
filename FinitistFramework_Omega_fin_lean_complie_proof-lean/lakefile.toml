@@ -1,0 +1,10 @@
+name = "FinitistFramework_Omega_fin_lean_complie_proof-lean"
+version = "0.1.0"
+defaultTargets = ["finitistframework_omega_fin_lean_complie_proof-lean"]
+
+[[lean_lib]]
+name = "FinitistFrameworkOmegaFinLeanComplieProof.Lean"
+
+[[lean_exe]]
+name = "finitistframework_omega_fin_lean_complie_proof-lean"
+root = "Main"

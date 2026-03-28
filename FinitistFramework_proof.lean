@@ -17,7 +17,7 @@ import Mathlib.Analysis.Fourier.FourierTransform
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NormNum
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.Calculus.MeanValueTheorem
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 namespace FinitistFramework
 
